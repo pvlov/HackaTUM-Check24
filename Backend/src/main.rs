@@ -1,20 +1,10 @@
 mod server;
+
 use actix_web::{web, App, HttpServer};
-use sqlx::{Connection, query};
-use sqlx_postgres::{PgConnectOptions, PgConnection};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     
-    let options = PgConnectOptions::new()
-        .host("localhost")
-        .port(5432)
-        .database("postgres")
-        .username("root")
-        .password("password");
-
-    let pool = PgConnection::connect_with(&options).await;
-
     println!("Listening on 0.0.0.0:8080");
     HttpServer::new(|| {
         App::new()

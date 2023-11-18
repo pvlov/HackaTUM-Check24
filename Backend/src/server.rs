@@ -1,5 +1,8 @@
 use actix_web::{get, web, HttpResponse, Responder};
 use serde::Deserialize;
+use sqlx::query;
+use sqlx_postgres::PgPoolOptions;
+
 
 #[derive(Deserialize)]
 pub struct PatchRequest {
@@ -10,6 +13,14 @@ pub struct PatchRequest {
 
 #[get("/")]
 async fn index() -> impl Responder {
+    let db_url = "0.0.0.0:5432";
+
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&db_url)
+        .await.unwrap();
+
+    let result = query!(r#"SELECT * FROM quality_factor_score"#);
     "I love catz :3\n"
 }
 
