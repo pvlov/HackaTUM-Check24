@@ -1,4 +1,5 @@
 use actix_web::{App, HttpServer, web};
+use sqlx::Connection;
 use sqlx_postgres::{PgConnectOptions, PgPool};
 
 mod server;
@@ -9,7 +10,7 @@ async fn main() -> std::io::Result<()> {
         .host("postgres_db")
         .port(5432)
         .database("postgres")
-        .username("postgres")
+        .username("root")
         .password("password");
 
     let pool = PgPool::connect_with(options).await.expect("Failed to connect to DB");
