@@ -10,12 +10,12 @@ async fn main() -> std::io::Result<()> {
         .host("localhost")
         .port(5432)
         .database("postgres")
-        .username("postgres")
+        .username("root")
         .password("password");
 
     let pool = PgConnection::connect_with(&options).await;
-    
-    println!("Listening on 127.0.0.1:8080");
+
+    println!("Listening on 0.0.0.0:8080");
     HttpServer::new(|| {
         App::new()
             .service(server::index)
@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
                     .route(web::patch().to(server::update_craftsman)),
             )
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }
