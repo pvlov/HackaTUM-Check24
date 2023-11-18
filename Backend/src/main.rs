@@ -1,8 +1,11 @@
 use actix_web::{App, HttpServer, web};
-use sqlx::Connection;
+use sqlx::query;
 use sqlx_postgres::{PgConnectOptions, PgPool};
 
 mod server;
+
+const ADDRESS: &str = "0.0.0.0";
+const PORT: i16 = 8080;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -15,7 +18,7 @@ async fn main() -> std::io::Result<()> {
 
     let pool = PgPool::connect_with(options).await.expect("Failed to connect to DB");
 
-    println!("Listening on 127.0.0.1:8080");
+    println!("Listening on {address}:{port}", port = PORT);
     HttpServer::new(move || {
         App::new().app_data(web::Data::new(pool.clone()))
             .service(server::index)
@@ -25,7 +28,7 @@ async fn main() -> std::io::Result<()> {
                     .route(web::patch().to(server::update_craftsman)),
             )
     })
-        .bind(("127.0.0.1", 8080))?
+        .bind((ADDRESS, PORT))?
         .run()
         .await
 }
