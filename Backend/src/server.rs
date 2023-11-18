@@ -1,15 +1,36 @@
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{get, HttpResponse, Responder, web};
 use serde::Deserialize;
+use serde_derive::Serialize;
 
-#[derive(Deserialize)]
-pub struct PatchRequest {
-    max_driving_distance: Option<i64>,
-    procile_picture_score: Option<i64>,
-    profile_description_score: Option<i64>,
+#[derive(Serialize, Deserialize)]
+#[allow(non_snake_case)]
+pub(crate) struct PatchRequest {
+    maxDrivingDistance: Option<i64>,
+    profilePictureScore: Option<i64>,
+    profileDescriptionScore: Option<i64>,
+}
+
+#[derive(Serialize)]
+struct PatchResponse {
+    id: i64,
+    updated: PatchRequest,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Craftsman {
+    id: u64,
+    name: String,
+    distance: f64,
+}
+
+#[derive(Serialize)]
+struct Response {
+    craftsmen: Vec<Craftsman>,
 }
 
 #[get("/")]
 async fn index() -> impl Responder {
+    println!("Hello World!");
     "I love catz :3\n"
 }
 
@@ -17,28 +38,39 @@ pub async fn update_craftsman(
     craftman_id: web::Path<String>,
     patch_request: web::Json<PatchRequest>,
 ) -> HttpResponse {
-    let max_driving_distance = patch_request.max_driving_distance;
-    let profile_picture_score = patch_request.procile_picture_score;
-    let profile_description_score = patch_request.profile_description_score;
+    println!("Hello Patch!");
+    let max_driving_distance = patch_request.maxDrivingDistance;
+    let profile_picture_score = patch_request.profilePictureScore;
+    let profile_description_score = patch_request.profileDescriptionScore;
 
-    if max_driving_distance.is_none()
+    let id = craftman_id.parse::<i64>();
+    if id.is_err() || max_driving_distance.is_none()
         && profile_picture_score.is_none()
         && profile_description_score.is_none()
     {
-        return HttpResponse::BadRequest().json("Missing RequestBody-Data");
+        return HttpResponse::BadRequest().body("Invalid request");
     }
 
-    // Add sql magic here
+    // TODO do sql magic here
 
-    HttpResponse::Ok().json(format!("Craftsman {} updated successfully", craftman_id))
+
+    HttpResponse::Ok().json(PatchResponse {
+        id: id.unwrap(),
+        updated: patch_request.into_inner(),
+    })
 }
 
 #[get("/{post_code}")]
 async fn get_craftsmen_data(post_code: web::Path<String>) -> impl Responder {
-    // Add sql magic here
-    //
-    println!("Hello World!");
+    println!("Hello Postcode {}!", post_code);
 
+    // TODO do sql magic here
 
-    format!("Hello {}!\n", &post_code)
+    let vec = vec![Craftsman {
+        id: 1,
+        name: "Test".to_string(),
+        distance: 1.0,
+    }];
+
+    HttpResponse::Ok().json(vec)
 }
