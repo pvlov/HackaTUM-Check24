@@ -1,5 +1,5 @@
 [package]
-name = "HackaTUM-Check24"
+name = "HackaTUM-Check24-Server"
 version = "0.1.0"
 edition = "2021"
 
