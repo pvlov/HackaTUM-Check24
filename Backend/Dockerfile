@@ -16,8 +16,7 @@ COPY Cargo.toml Cargo.lock ./
 COPY . .
 
 # Build your Rust application
-RUN cargo build --release 
-
+RUN cargo build --release
 # Create a new image using a smaller base image
 FROM ubuntu:latest
 

@@ -10,7 +10,7 @@ pub struct PatchRequest {
 
 #[get("/")]
 async fn index() -> impl Responder {
-    "I love catz :3"
+    "I love catz :3\n"
 }
 
 pub async fn update_craftsman(
@@ -36,6 +36,9 @@ pub async fn update_craftsman(
 #[get("/{post_code}")]
 async fn get_craftsmen_data(post_code: web::Path<String>) -> impl Responder {
     // Add sql magic here
+    //
+    println!("Hello World!");
+
 
     format!("Hello {}!\n", &post_code)
 }
