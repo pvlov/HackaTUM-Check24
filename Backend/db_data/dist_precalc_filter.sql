@@ -17,5 +17,7 @@ with tmp as (select postcode,
 insert into dist_precalc_filter
 select *
 from tmp
-where dist < max_driving_distance
+where (postcode_extension_distance_group = 'group_a' and dist < max_driving_distance)
+or (postcode_extension_distance_group = 'group_b' and dist < max_driving_distance + 2000)
+or (postcode_extension_distance_group = 'group_c' and dist < max_driving_distance + 5000)
 order by postcode, dist
